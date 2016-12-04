@@ -1,0 +1,72 @@
+html,
+body{
+  background-color: grey;
+  color: white;
+  height: 100%;
+}
+
+#nightlife-app{
+  min-height: 100%;
+}
+
+.footer {
+  width: 100%;
+  background-color: white;
+  color: grey;
+  padding: .5%;
+}
+
+.search-container{
+  text-align: center;
+  margin-top: 5%;
+}
+
+.search-container h1{
+  font-size: 4em;
+}
+
+.search-results{
+  list-style-type: none;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.search-results li{
+  border: 1px solid white;
+  border-radius: 25px;
+  padding: 20px;
+  text-align: left;
+  display: inline-block;
+  margin: 10px 0px;
+}
+
+.search-results li a{
+  color: white;
+}
+
+.search-results li img{
+  border: 1px solid silver;
+  float:left;
+}
+
+.search-results li p{
+  margin-left: 125px;
+  overflow: hidden;
+}
+
+.rsvp-location{
+  margin-left:10px;
+  padding: 0 5px;
+}
+
+.ghost-button:hover {
+  background-color: white;
+  color: #5a5c51;
+}
+
+.ghost-button {
+  color: white;
+  background: none;
+  border: 1px solid white;
+}
