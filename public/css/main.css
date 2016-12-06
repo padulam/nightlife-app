@@ -28,7 +28,7 @@ body{
 .search-results{
   list-style-type: none;
   max-width: 800px;
-  margin: 0 auto;
+  margin: 10px auto;
   padding: 0;
 }
 
@@ -69,4 +69,11 @@ body{
   color: white;
   background: none;
   border: 1px solid white;
+}
+
+.attending{
+  margin-left: 10px;
+  text-align: right;
+  float: right;
+  color: yellow;
 }

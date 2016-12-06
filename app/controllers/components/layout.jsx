@@ -42,7 +42,7 @@ export default class Layout extends React.Component {
     if(!this.state.user){
       var signIn = <SignIn AuthenticateTwitter={this._AuthenticateTwitter}/>;
     }else{
-
+      var userProfile = '';
     }
 
     return(

@@ -1,4 +1,5 @@
 var yelp = require('node-yelp');
+var Rsvp = require('../../models/rsvps');
 
 function NightlifeApi(){
   this.getLocations = function(request, response){
@@ -17,6 +18,31 @@ function NightlifeApi(){
       category_filter: "bars"
     }).then(function(data){
       response.json(data);
+    });
+  }
+
+  this.rsvpToLocation = function(request, response){
+    Rsvp.findOne({yelp_id: request.params.yelp_id}, function(err, rsvp){
+      if(err) response.json({err: err});
+
+      if(rsvp){
+        rsvp.going.push(request.user.twitter.username);
+        rsvp.save(function(err){
+          if(err) response.json({err: err});
+
+          response.json({success: 'RSVP added!'});
+        });
+      }else{
+        var newRsvp = new Rsvp();
+        newRsvp.going.push(request.user.twitter.username);
+        newRsvp.yelp_id = request.params.yelp_id;
+
+        newRsvp.save(function(err){
+          if(err) response.json({err: err});
+
+          response.json({success: 'RSVP added!'}); 
+        });
+      } 
     });
   }
 }

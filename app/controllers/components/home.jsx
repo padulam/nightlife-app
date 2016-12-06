@@ -35,22 +35,41 @@ class Search extends React.Component {
 }
 
 class Bar extends React.Component {
+  _submitRsvp(){
+    var appUrl = window.location.origin;
+    var apiUrl = appUrl + '/api/rsvp/' + this.props.yelpId;
+    var bars = this;
+
+    ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
+      console.log(JSON.parse(data));
+    }));
+  }
+
   render(){
     return(
       <li>
         <img src={this.props.img} className="img-responsive" alt={this.props.name}/>
-        <p><a href={this.props.url}>{this.props.name}</a><Rsvp /></p>
+        <p><a href={this.props.url}>{this.props.name}</a><Rsvp submitRsvp={this._submitRsvp.bind(this)} /><span className="attending">{this.props.attending} going</span></p>
         <p>"<em>{this.props.snippet}</em>"</p>
-        
       </li>
     );
   }
 }
 
 class Rsvp extends React.Component {
+  constructor(props) {
+    super(props);
+  
+    this.handleClick = this._handleClick.bind(this);
+  }
+
+  _handleClick(){
+    this.props.submitRsvp();
+  }
+
   render(){
     return(
-      <button className="btn btn-primary rsvp-location ghost-button">I'm going!</button>
+      <button onClick={this.handleClick} className="btn btn-primary rsvp-location ghost-button">I'm going!</button>
     );
   }
 }
@@ -69,7 +88,6 @@ export default class Home extends React.Component {
 
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', apiUrl, function(data){
       let barData = JSON.parse(data)
-      console.log(barData.businesses);
       bars.setState({bars: barData.businesses});
     }));
   }
@@ -79,11 +97,12 @@ export default class Home extends React.Component {
     return this.state.bars.map((bar)=> {
       i++;
       return <Bar
-                id={bar.id}
+                yelpId={bar.id}
                 name={bar.name}
                 url={bar.mobile_url}
                 img={bar.image_url}
                 snippet={bar.snippet_text}
+                attending={1}
                 key={i}
               />
     });
