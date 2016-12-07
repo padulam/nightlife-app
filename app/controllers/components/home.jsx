@@ -35,21 +35,36 @@ class Search extends React.Component {
 }
 
 class Bar extends React.Component {
+  constructor(props) {
+    super(props);
+  
+    this.state = {rsvp: this.props.userGoing, attending: this.props.attending};
+  }
+
   _submitRsvp(){
     var appUrl = window.location.origin;
     var apiUrl = appUrl + '/api/rsvp/' + this.props.yelpId;
-    var bars = this;
+    var bar = this;
+    if(this.state.rsvp){
 
-    ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
-      console.log(JSON.parse(data));
-    }));
+    } else{
+      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
+        bar.setState({rsvp: true, attending: this.props.attending + 1});
+      }));
+    }
   }
 
   render(){
+    var attending = 0;
+
+    if(this.state.rsvp){
+      attending = 1;
+    }
+
     return(
       <li>
         <img src={this.props.img} className="img-responsive" alt={this.props.name}/>
-        <p><a href={this.props.url}>{this.props.name}</a><Rsvp submitRsvp={this._submitRsvp.bind(this)} /><span className="attending">{this.props.attending} going</span></p>
+        <p><a href={this.props.url} target="_blank">{this.props.name}</a><Rsvp attending={this.state.rsvp} submitRsvp={this._submitRsvp.bind(this)} /><span className="attending">{this.state.attending} going</span></p>
         <p>"<em>{this.props.snippet}</em>"</p>
       </li>
     );
@@ -68,8 +83,16 @@ class Rsvp extends React.Component {
   }
 
   render(){
+    let status;
+
+    if(this.props.attending){
+      status = "I'm not going"
+    } else{
+      status = "I'm going";
+    }
+
     return(
-      <button onClick={this.handleClick} className="btn btn-primary rsvp-location ghost-button">I'm going!</button>
+      <button onClick={this.handleClick} className="btn rsvp-location ghost-button">{status}</button>
     );
   }
 }
@@ -88,7 +111,7 @@ export default class Home extends React.Component {
 
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', apiUrl, function(data){
       let barData = JSON.parse(data)
-      bars.setState({bars: barData.businesses});
+      bars.setState({bars: barData});
     }));
   }
 
@@ -102,7 +125,8 @@ export default class Home extends React.Component {
                 url={bar.mobile_url}
                 img={bar.image_url}
                 snippet={bar.snippet_text}
-                attending={1}
+                attending={bar.attending}
+                userGoing={bar.userGoing}
                 key={i}
               />
     });

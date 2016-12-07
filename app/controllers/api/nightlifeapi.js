@@ -17,7 +17,42 @@ function NightlifeApi(){
       location: request.params.location,
       category_filter: "bars"
     }).then(function(data){
-      response.json(data);
+
+        Rsvp.find(function(err, rsvps){
+          var businessData = data.businesses.map(function(business){
+            var going = 0;
+            var userGoing = false;
+
+            if(err) response.json({err: err});
+            
+            function findBusiness(b){
+              return b.yelp_id === business.id;
+            }
+
+            function findUser(u){
+              return u===request.user.twitter.username;
+            }
+
+            var rsvpData = rsvps.find(findBusiness);
+
+            if(rsvpData){
+              going = rsvpData.going.length;
+              if(rsvpData.going.find(findUser)){
+                userGoing = true;
+              }
+            }
+
+            return {id: business.id,
+                    name: business.name,
+                    mobile_url: business.mobile_url,
+                    image_url: business.image_url,
+                    snippet_text: business.snippet_text,
+                    attending: going,
+                    userGoing: userGoing};
+          });
+
+          response.json(businessData);
+        });
     });
   }
 
@@ -30,7 +65,7 @@ function NightlifeApi(){
         rsvp.save(function(err){
           if(err) response.json({err: err});
 
-          response.json({success: 'RSVP added!'});
+          response.json({going: rsvp.going.length});
         });
       }else{
         var newRsvp = new Rsvp();
@@ -40,7 +75,7 @@ function NightlifeApi(){
         newRsvp.save(function(err){
           if(err) response.json({err: err});
 
-          response.json({success: 'RSVP added!'}); 
+          response.json({going: 1}); 
         });
       } 
     });
