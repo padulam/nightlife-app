@@ -60,7 +60,8 @@ body{
   padding: 0 5px;
 }
 
-.ghost-button:hover {
+.ghost-button:hover,
+.ghost-button:focus {
   background-color: white;
   color: #5a5c51;
 }

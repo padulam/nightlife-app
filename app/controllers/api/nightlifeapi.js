@@ -17,7 +17,6 @@ function NightlifeApi(){
       location: request.params.location,
       category_filter: "bars"
     }).then(function(data){
-
         Rsvp.find(function(err, rsvps){
           var businessData = data.businesses.map(function(business){
             var going = 0;
@@ -26,7 +25,7 @@ function NightlifeApi(){
             if(err) response.json({err: err});
             
             function findBusiness(b){
-              return b.yelp_id === business.id;
+              return b.yelp_id===business.id;
             }
 
             function findUser(u){
@@ -53,6 +52,23 @@ function NightlifeApi(){
 
           response.json(businessData);
         });
+    });
+  }
+
+  this.removeRsvp = function(request, response){
+    Rsvp.findOne({yelp_id: request.params.yelp_id}, function(err, rsvp){
+      if(err) response.json({err: err});
+
+      var i = rsvp.going.indexOf(request.user.twitter.username);
+      console.log(i);
+      rsvp.going.splice(i,1);
+      console.log(rsvp.going);
+
+      rsvp.save(function(err){
+        if(err) response.json({err: err});
+
+        response.json({going:rsvp.going.length})
+      });
     });
   }
 

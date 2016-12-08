@@ -28,7 +28,8 @@ module.exports = function(app, passport){
     .get(nightlifeApi.getLocations);
 
   app.route('/api/rsvp/:yelp_id')
-    .post(nightlifeApi.rsvpToLocation);
+    .post(nightlifeApi.rsvpToLocation)
+    .put(nightlifeApi.removeRsvp);
 
   app.route('/auth/twitter')
     .get(passport.authenticate('twitter'));

@@ -1,5 +1,5 @@
 import React from 'react';
-import ajaxFunctions from '../../common/ajax-functions'
+import ajaxFunctions from '../../common/ajax-functions';
 
 class Search extends React.Component {
   constructor(props) {
@@ -12,13 +12,12 @@ class Search extends React.Component {
   }
 
   _changeLocation(){
-    this.setState({location: this._location.value})
+    this.setState({location: this._location.value});
   }
 
   _submitLocation(e){
     e.preventDefault();
     this.props.submitLocation(this.state.location);
-    this.setState({location:  undefined});
   }
 
   render(){
@@ -46,10 +45,12 @@ class Bar extends React.Component {
     var apiUrl = appUrl + '/api/rsvp/' + this.props.yelpId;
     var bar = this;
     if(this.state.rsvp){
-
+      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('PUT', apiUrl, function(data){
+        bar.setState({rsvp: false, attending: bar.props.attending - 1});
+      }));
     } else{
       ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
-        bar.setState({rsvp: true, attending: this.props.attending + 1});
+        bar.setState({rsvp: true, attending: bar.props.attending + 1});
       }));
     }
   }
@@ -127,7 +128,7 @@ export default class Home extends React.Component {
                 snippet={bar.snippet_text}
                 attending={bar.attending}
                 userGoing={bar.userGoing}
-                key={i}
+                key={bar.id}
               />
     });
   }
