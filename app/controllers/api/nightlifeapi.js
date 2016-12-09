@@ -1,5 +1,6 @@
 var yelp = require('node-yelp');
 var Rsvp = require('../../models/rsvps');
+var User = require('../../models/users');
 
 function NightlifeApi(){
   this.getLocations = function(request, response){
@@ -29,7 +30,10 @@ function NightlifeApi(){
             }
 
             function findUser(u){
-              return u===request.user.twitter.username;
+              if(request.user){
+                return u===request.user.twitter.username;
+              }
+                return false;
             }
 
             var rsvpData = rsvps.find(findBusiness);
@@ -60,9 +64,7 @@ function NightlifeApi(){
       if(err) response.json({err: err});
 
       var i = rsvp.going.indexOf(request.user.twitter.username);
-      console.log(i);
       rsvp.going.splice(i,1);
-      console.log(rsvp.going);
 
       rsvp.save(function(err){
         if(err) response.json({err: err});

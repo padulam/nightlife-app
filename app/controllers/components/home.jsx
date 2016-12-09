@@ -40,18 +40,26 @@ class Bar extends React.Component {
     this.state = {rsvp: this.props.userGoing, attending: this.props.attending};
   }
 
+  _AuthenticateTwitter(){
+    window.location = '/auth/twitter'
+  }
+
   _submitRsvp(){
     var appUrl = window.location.origin;
     var apiUrl = appUrl + '/api/rsvp/' + this.props.yelpId;
     var bar = this;
-    if(this.state.rsvp){
-      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('PUT', apiUrl, function(data){
-        bar.setState({rsvp: false, attending: bar.props.attending - 1});
-      }));
+    if(this.props.user){
+      if(this.state.rsvp){
+        ajaxFunctions.ready(ajaxFunctions.ajaxRequest('PUT', apiUrl, function(data){
+          bar.setState({rsvp: false, attending: bar.props.attending - 1});
+        }));
+      } else{
+        ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
+          bar.setState({rsvp: true, attending: bar.props.attending + 1});
+        }));
+      }
     } else{
-      ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
-        bar.setState({rsvp: true, attending: bar.props.attending + 1});
-      }));
+      this._AuthenticateTwitter();
     }
   }
 
@@ -102,17 +110,46 @@ export default class Home extends React.Component {
   constructor(props) {
     super(props);
   
-    this.state = {bars:[]};
+    this.state = {bars:[], user: undefined};
+  }
+
+  componentWillMount() {
+    this._fetchUserData();
+    this._locateStoredLocation();
+  }
+
+  _locateStoredLocation(){
+    const location = localStorage.getItem('_bar_location');
+
+    if(location !== null){
+      this._fetchBars(location);
+    }
+  }
+
+  _saveLocation(location){
+    localStorage.setItem('_bar_location', location);
   }
 
   _fetchBars(location){
     var appUrl = window.location.origin;
     var apiUrl = appUrl + '/api/nightlife/' + location;
     var bars = this;
+    this._saveLocation(location);
 
     ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', apiUrl, function(data){
       let barData = JSON.parse(data)
-      bars.setState({bars: barData});
+      bars.setState({bars: barData, user: bars.state.user});
+    }));
+  }
+
+  _fetchUserData(){
+    var appUrl = window.location.origin;
+    var apiUrl = appUrl + '/api/user/:id';
+    var bars = this;
+
+    ajaxFunctions.ready(ajaxFunctions.ajaxRequest('GET', apiUrl, function(data){
+      let userObject = JSON.parse(data);
+      bars.setState({bars: bars.state.bars, user: userObject});
     }));
   }
 
@@ -127,6 +164,7 @@ export default class Home extends React.Component {
                 img={bar.image_url}
                 snippet={bar.snippet_text}
                 attending={bar.attending}
+                user={this.state.user}
                 userGoing={bar.userGoing}
                 key={bar.id}
               />

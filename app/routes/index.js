@@ -17,7 +17,7 @@ module.exports = function(app, passport){
     .get(function(request, response){
       request.logout();
       response.redirect('/');
-  });
+    });
 
   app.route('/api/user/:id')
     .get(function(request, response){
