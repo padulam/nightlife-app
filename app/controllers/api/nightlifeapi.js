@@ -93,7 +93,7 @@ function NightlifeApi(){
         newRsvp.save(function(err){
           if(err) response.json({err: err});
 
-          response.json({going: 1}); 
+          response.json({going: rsvp.going.length});
         });
       } 
     });

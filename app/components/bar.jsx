@@ -20,11 +20,13 @@ export default class Bar extends React.Component {
     if(this.props.user){
       if(this.state.rsvp){
         ajaxFunctions.ready(ajaxFunctions.ajaxRequest('PUT', apiUrl, function(data){
-          bar.setState({rsvp: false, attending: bar.props.attending - 1});
+          let barData = JSON.parse(data);
+          bar.setState({rsvp: false, attending: barData.going});
         }));
       } else{
         ajaxFunctions.ready(ajaxFunctions.ajaxRequest('POST', apiUrl, function(data){
-          bar.setState({rsvp: true, attending: bar.props.attending + 1});
+          let barData = JSON.parse(data);
+          bar.setState({rsvp: true, attending: barData.going});
         }));
       }
     } else{
