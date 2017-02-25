@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
-import ajaxFunctions from '../../common/ajax-functions';
+import ajaxFunctions from '../common/ajax-functions';
 
 export default class Layout extends React.Component {
   constructor() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import ajaxFunctions from '../../common/ajax-functions';
+import ajaxFunctions from '../common/ajax-functions';
 
 class Search extends React.Component {
   constructor(props) {
