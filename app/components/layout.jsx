@@ -2,6 +2,8 @@ import React from 'react';
 import {Link} from 'react-router';
 import {browserHistory} from 'react-router';
 import ajaxFunctions from '../common/ajax-functions';
+import SignIn from './sign-in.jsx';
+import SignOut from './sign-out.jsx';
 
 export default class Layout extends React.Component {
   constructor() {
@@ -68,21 +70,5 @@ export default class Layout extends React.Component {
         {this.props.children}
       </div>
     );
-  }
-}
-
-class SignOut extends React.Component {
-  render(){
-    return (<button onClick={this.props.DeauthenticateTwitter}  className="btn btn-twitter sign-out navbar-btn">
-              <span className="fa fa-twitter"></span> Sign Out
-            </button>);
-  }
-}
-
-class SignIn extends React.Component {
-  render(){
-    return (<li><button onClick={this.props.AuthenticateTwitter}  className="btn btn-twitter navbar-btn">
-              <span className="fa fa-twitter"></span> Sign in with Twitter
-            </button></li>);
   }
 }
