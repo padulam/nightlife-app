@@ -10,10 +10,10 @@ if(port===3000){
   require('dotenv').load()
   var webpack = require('webpack');
   var WebpackDevServer = require('webpack-dev-server');
-  var config = require('./webpack.config');
+  var devConfig = require('./webpack.config.dev');
 
-  new WebpackDevServer(webpack(config),{
-    publicPath: config.output.publicPath,
+  new WebpackDevServer(webpack(devConfig),{
+    publicPath: devConfig.output.publicPath,
     hot: true,
     historyApiFallback: true,
     proxy:{
@@ -31,7 +31,7 @@ app.use(express.static('public'));
 app.use('/bower_components', express.static('./bower_components'));
 
 app.use(session({
-  secret: 'secretVoting',
+  secret: 'secretNightlife',
   resave: false,
   saveUninitialized: true
 }));
