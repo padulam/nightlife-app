@@ -26,6 +26,16 @@ require('./app/config/passport')(passport);
 
 mongoose.connect(process.env.MONGO_URI);
 
+function httpsRouting(request, response, next){
+  if(request.headers["x-forwarded-proto"]!== "https"){
+    response.redirect('https://' + request.hostname + request.originalUrl);
+  }else{
+    next();
+  }
+}
+
+app.all('*', httpsRouting);
+
 app.use(express.static('public'));
 
 app.use('/bower_components', express.static('./bower_components'));
